@@ -50,6 +50,8 @@ public class StreamingPlugIn extends TokenPlugIn {
 	private StressStream mStressStream = null;
 	private JDBCStream mJDBCStream = null;
 	private StatisticStream mStatisticStream = null;
+	
+	private ChartStream mChartStream = null;
 
 	/**
 	 * create a new instance of the streaming plug-in and set the default name
@@ -89,6 +91,9 @@ public class StreamingPlugIn extends TokenPlugIn {
 				// create the stream for the statistics stream demo
 				mStatisticStream = new StatisticStream("statisticStream", lTokenServer);
 				addStream(mStatisticStream);
+				// create the stream for the chart stream demo
+				mChartStream = new ChartStream("chartStream", lTokenServer);
+				addStream(mChartStream);
 				mStreamsInitialized = true;
 			}
 		}
@@ -121,11 +126,16 @@ public class StreamingPlugIn extends TokenPlugIn {
 				if (mStatisticStream != null) {
 					mStatisticStream.stopStream(3000);
 				}
+				// stop the stream for the chart stream demo
+				if (mChartStream != null) {
+					mChartStream.stopStream(3000);
+				}
 				mTimeStream = null;
 				mMonitorStream = null;
 				mStressStream = null;
 				mJDBCStream = null;
 				mStatisticStream = null;
+				mChartStream = null;
 				mStreamsInitialized = false;
 			}
 		}
