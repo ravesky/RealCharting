@@ -54,17 +54,19 @@ function disconnect() {
 	if(jWebSocketClient) {
 		jWebSocketClient.stopKeepAlive();
 		var result = jWebSocketClient.close();
-		if (result.code == 0) {					
-			$('#log').html("");
-			$('#log').html("jWebSocket disconnected");			
+		if (result.code == 0) {
+			log("jWebSocket disconnected");
 		} else {
-			$('#log').html("");
-			$('#log').html("Error while disconnecting");						
+			log("Error while disconnecting");
 		}
 	}
 }
 
-
+function log(message) {
+	$('#top_message').text(message).slideDown().delay(500).slideUp();
+}
+	
+	
 $(document).ready(function() {
 	
 	AmCharts.ready(function() {
@@ -171,26 +173,22 @@ $(document).ready(function() {
 		try {
 			var result = jWebSocketClient.logon(URL, jws.GUEST_USER_LOGINNAME, jws.GUEST_USER_PASSWORD, {
 				OnOpen: function(levent) {
-					$('#log').html("");
-					$('#log').html("jWebSocket connection established");			
 				},
 			   OnWelcome: function(levent) {
 					var stream = "chartStream";
-					result = jWebSocketClient.registerStream(stream);
-					//alert("Result Register: " + jWebSocketClient.resultToString(result));
+					var result = jWebSocketClient.registerStream(stream);
+					result = jWebSocketClient.resultToString(result);
+					log("jWebSocket connection established " + result);
     			},  
 				OnMessage: function(levent, token) {
 					if(jWebSocketClient.isLoggedIn()) {
 						parsePieChartData(levent.data);
 						parseLineChartData(levent.data);
 					} else {
-						//$('#log').html("");
-						//$('#log').html("conected");		
 					}
 				},
 				OnClose: function(levent) {
-					$('#log').html("");
-					$('#log').html("jWebSocket connection closed.");										
+					log("jWebSocket connection closed");						
 				}
 			}); // jWebSocketClient.logon()
 		} catch(e) {

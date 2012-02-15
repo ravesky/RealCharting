@@ -21,7 +21,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -29,8 +28,6 @@ import org.jwebsocket.logging.Logging;
 import org.jwebsocket.server.TokenServer;
 import org.jwebsocket.token.Token;
 import org.jwebsocket.token.TokenFactory;
-
-import javolution.util.FastMap;
 
 /**
  * implements the ChartStream. It implements an internal thread 
@@ -166,22 +163,11 @@ public class ChartStream extends TokenStream {
                   
                   ResultSet pResult = pSelect.executeQuery();
                   
-                  ArrayList<Object> arrayList = new ArrayList<Object>();
-                  
                   while (pResult.next()) {
-                     
-                     FastMap<String, Object> lRecord = new FastMap<String, Object>();
-                  
-                     lRecord.put("status", pResult.getString(1));
-                     lRecord.put("count", pResult.getInt(2));
-                     lRecord.put("date", pResult.getTimestamp(3));
-                     arrayList.add(lRecord);
-                     
                      lToken.setInteger(pResult.getString(1), pResult.getInt(2));
                   }
                   
-                  lToken.setList("query", arrayList);
-                  log.debug("Chart streamer query '" + arrayList + "'...");
+                  log.debug("Chart Streamer Token '" + lToken + "'...");
                           
                } catch (SQLException lEx) {
                        lEx.printStackTrace();
