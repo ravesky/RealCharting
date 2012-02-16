@@ -188,7 +188,7 @@ $(document).ready(function() {
 					}
 				},
 				OnClose: function(levent) {
-					log("jWebSocket connection closed");						
+					log("jWebSocket connection closed");
 				}
 			}); // jWebSocketClient.logon()
 		} catch(e) {

@@ -29,12 +29,6 @@ import org.jwebsocket.server.TokenServer;
 import org.jwebsocket.token.Token;
 import org.jwebsocket.token.TokenFactory;
 
-/**
- * implements the ChartStream. It implements an internal thread 
- * which broadcasts custom database query of the server to
- * count the status of record type once per second.
- * @author Angel Martin
- */
 public class ChartStream extends TokenStream {
 
    private static Logger log = Logging.getLogger(ChartStream.class);
