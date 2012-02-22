@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.apache.log4j.Logger;
 import org.jwebsocket.logging.Logging;
@@ -58,20 +59,21 @@ public class ChartStream extends TokenStream {
       }
       
       try {
+         /*
           Class.forName("com.timesten.jdbc.TimesTenDriver");
           mConnection = DriverManager.getConnection(
                "jdbc:timesten:direct:DSN=DS_ttIUM;UID=ium;PWD=01ium00");
-          /*
+         */
+          
           Class.forName("com.mysql.jdbc.Driver");
           mConnection = DriverManager.getConnection(
                   "jdbc:mysql://localhost/jWebSocket", "root", "");
-          */
           
          if (log.isDebugEnabled()) {
-               log.debug("Connection with Timesten database established...");
+               log.debug("Connection with database established...");
            }
       } catch (SQLException lEx) {
-         lEx.printStackTrace();
+         log.error("(sql) " + lEx.getClass().getSimpleName() + ": " + lEx.getMessage());
       } catch (ClassNotFoundException lEx) {
          lEx.printStackTrace();
       }
@@ -107,13 +109,17 @@ public class ChartStream extends TokenStream {
 
       try {
          if (mConnection != null && !mConnection.isClosed()) {
-             if (log.isDebugEnabled()) {
-                 log.debug("Closing connection...");
-             }
-             mConnection.close();
+            if (log.isDebugEnabled()) {
+               log.debug("Closing connection...");
+            }
+            mConnection.close();
+
+            if (log.isDebugEnabled()) {
+               log.debug("Connection closed.");
+            }
          }
-      } catch (Exception e) {
-         e.printStackTrace();
+      } catch (Exception lEx) {
+         log.error(lEx.getClass().getSimpleName() + ": " + lEx.getMessage());
       }
       
       super.stopStream(aTimeout);
@@ -132,28 +138,18 @@ public class ChartStream extends TokenStream {
                Thread.sleep(1000);
 
                Token lToken = TokenFactory.createToken("event");
+               GregorianCalendar lCal = new GregorianCalendar();
+               
                lToken.setString("name", "stream");
-               lToken.setString("msg", new Date().toString());
+               lToken.setString("msg", new Date(lCal.getTimeInMillis()).toString());
                lToken.setString("streamID", getStreamID());
                
                try {
                   PreparedStatement pSelect = 
                         mConnection.prepareStatement(
-                        "SELECT PLAYER_STATUSSTRING AS STATUS, " +
-                        "COUNT(PLAYER_STATUSSTRING) AS COUNT, " +
-                        "SYSDATE AS CURRENT_DATE " +
-                        "FROM SESSIONS " +
-                        "GROUP BY PLAYER_STATUSSTRING");
-                  
-                  /*
-                  PreparedStatement pSelect = 
-                        mConnection.prepareStatement(
-                              "SELECT STATUS, " +       // "status"
-                              "COUNT(STATUS), " +       // "count"
-                              "NOW() " +                // "date"
-                              "FROM SESSIONS " +
-                              "GROUP BY STATUS");
-                  */
+                        "SELECT FLIGHT_STATUS, COUNT(FLIGHT_STATUS) " +
+                        "FROM flights " +
+                        "GROUP BY FLIGHT_STATUS");
                   
                   ResultSet pResult = pSelect.executeQuery();
                   
@@ -164,7 +160,7 @@ public class ChartStream extends TokenStream {
                   log.debug("Chart Streamer Token '" + lToken + "'...");
                           
                } catch (SQLException lEx) {
-                       lEx.printStackTrace();
+                  log.error("(sql) " + lEx.getClass().getSimpleName() + ": " + lEx.getMessage());
                }
                
                put(lToken);
