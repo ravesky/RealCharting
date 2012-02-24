@@ -59,15 +59,9 @@ public class ChartStream extends TokenStream {
       }
       
       try {
-         /*
-          Class.forName("com.timesten.jdbc.TimesTenDriver");
-          mConnection = DriverManager.getConnection(
-               "jdbc:timesten:direct:DSN=DS_ttIUM;UID=ium;PWD=01ium00");
-         */
-          
           Class.forName("com.mysql.jdbc.Driver");
           mConnection = DriverManager.getConnection(
-                  "jdbc:mysql://localhost/jWebSocket", "root", "");
+                  "jdbc:mysql://16.38.0.15/jWebSocket", "root", "toor");
           
          if (log.isDebugEnabled()) {
                log.debug("Connection with database established...");
