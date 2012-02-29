@@ -62,7 +62,7 @@ var jws = {
 	JWS_SERVER_SSL_SCHEMA: "wss",
 	//:const:*:JWS_SERVER_HOST:String:[hostname|localhost|IP-Number]
 	//:d:en:Default hostname of current website or [tt]localhost|127.0.0.1[/tt] if no hostname can be detected.
-	JWS_SERVER_HOST: ( self.location.hostname ? self.location.hostname : "16.38.0.15" ),
+	JWS_SERVER_HOST: ( self.location.hostname ? self.location.hostname : "127.0.0.1" ),
 	//:const:*:JWS_SERVER_PORT:Integer:8787
 	//:d:en:Default port number, 8787 for stand-alone un-secured servers, _
 	//:d:en:80 for Jetty or Glassfish un-secured servers.

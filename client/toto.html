@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>RealTime Charting</title>
+		<meta charset="UTF-8">
+		<meta name="description" content="" />
+      
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+		<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		<script type="text/javascript" src="js/kickstart/prettify.js"></script>					                     <!-- PRETTIFY -->
+		<script type="text/javascript" src="js/kickstart/kickstart.js"></script>                                 <!-- KICKSTART -->
+      <script type="text/javascript" src="js/amcharts/amcharts.js"></script>												<!-- AMCHARTS -->
+      <script type="text/javascript" src="js/amcharts/raphael.js"></script>												<!-- RAPHAEL -->
+      <script type="text/javascript" src="js/jwebsocket/jWebSocket.js"></script>											<!-- JWEBSOCKET -->
+      <script type="text/javascript" src="js/jwebsocket/jwsStreamingPlugIn.js"></script>								<!-- JWSSTREAMINGPLUGIN -->
+      
+      <script type="text/javascript" src="js/chart.js"></script>
+            
+   	<link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />                  			<!-- KICKSTART -->
+		<link rel="stylesheet" type="text/css" href="css/style.css" media="all" />                      			<!-- CUSTOM STYLES -->
+	</head>
+   
+   <body>
+   	
+     	<div id="top_message"></div>
+   
+      <div id="wrap" class="clearfix">
+
+	 
+			<div class="col_12">
+	
+   
+				<div class="col_4">
+            
+					<h4>Pie Chart</h4>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, 
+               sed diam nonummy nibh euismod tincidunt ut laoreet dolore 
+					magna aliquam erat volutpat. Ut wisi enim ad minim veniam, 
+               quis nostrud exerci tation ullamcorper suscipit lobortis</p>
+               
+               <div id="pieChartDiv" style="width:100%; height:300px;"></div>
+
+				</div> <!-- .col_5 -->
+	
+				<div class="col_8">
+            
+					<h4>Linear Chart</h4>
+					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, 
+               sed diam nonummy nibh euismod tincidunt ut laoreet dolore 
+					magna aliquam erat volutpat. Ut wisi enim ad minim veniam, 
+               quis nostrud exerci tation ullamcorper suscipit lobortis
+               Ut wisi enim ad minim veniam, 
+               quis nostrud exerci tation ullamcorper suscipit lobortis</p>
+                              
+					<div id="lineChartDiv" style="width:100%; height:300px;"></div>
+               
+				</div> <!-- .col_7 -->
+            
+	
+         	<button id="connect" class="medium">Connect</button>
+      		<button id="disconnect" class="medium">Disconnect</button>
+            
+            <br>
+      	
+         	<div id="log"></div>
+            
+
+			</div> <!-- .col_12 -->
+         
+
+	
+   	<div class="clear"></div>
+      
+		
+      <div id="footer">
+			&copy; Copyright 2011–2012 All Rights Reserved. 
+         This website was built with <a href="http://www.99lime.com">HTML KickStart</a>
+		</div>
+
+	
+   	</div><!-- #wrap -->
+	</body>
+</html>
