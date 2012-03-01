@@ -20,9 +20,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.apache.log4j.Logger;
 import org.jwebsocket.logging.Logging;
@@ -37,6 +37,7 @@ public class ChartStream extends TokenStream {
    private TimerProcess mTimeProcess = null;
    private Thread mTimeThread = null;
    private Connection mConnection = null;
+   private SimpleDateFormat simpleDateFormat = null;
 
    /**
     * @param aStreamID
@@ -61,7 +62,7 @@ public class ChartStream extends TokenStream {
       try {
           Class.forName("com.mysql.jdbc.Driver");
           mConnection = DriverManager.getConnection(
-                  "jdbc:mysql://localhost/jWebSocket", "root", "");
+                  "jdbc:mysql://16.38.0.15/jWebSocket", "root", "toor");
           
          if (log.isDebugEnabled()) {
                log.debug("Connection with database established...");
@@ -127,16 +128,17 @@ public class ChartStream extends TokenStream {
             log.debug("Running chart stream...");
          }
          mIsRunning = true;
+         simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss");
+         
          while (mIsRunning) {
             try {
                Thread.sleep(1000);
 
                Token lToken = TokenFactory.createToken("event");
-               GregorianCalendar lCal = new GregorianCalendar();
                
                lToken.setString("name", "stream");
-               lToken.setString("msg", new Date(lCal.getTimeInMillis()).toString());
                lToken.setString("streamID", getStreamID());
+               lToken.setString("DATE", simpleDateFormat.format(new Date()));
                
                try {
                   PreparedStatement pSelect = 
