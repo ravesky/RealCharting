@@ -3,23 +3,31 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>RealTime Charting jWebSocket</title>
-      <link rel="stylesheet" href="css/style.css"/>     
+      <link rel="stylesheet" href="css/style.css"/>
 	</head>
-	<body>
-   	
-      <div id="chartdiv" style="width:600px; height:300px;"></div>
+	
+   <body>
+   <div id="wrap">
+   
+		<header id="main">
+		</header>	
 
-      <div id="counters">
-      	<ul>
-         	<li>Landing <span id="landing_counter">0</span></li>
-         	<li>Boarding <span id="boarding_counter">0</span></li>
-         	<li>Taking Off <span id="taking_off_counter">0</span></li>                     
-         </ul>
-      </div>
+      <section id="summary">
+      	<div id="chartdiv"></div>
+      	<div id="counters">
+      		<ul>
+         		<li>Landing <span id="landing">0</span></li>
+         		<li>Boarding <span id="boarding">0</span></li>
+         		<li>Taking Off <span id="taking_off">0</span></li>                     
+         	</ul>
+      	</div>
+      	<a id="connect" href="#">Connect</a>
+      	<a id="disconnect" href="#">Disconnect</a>
+      </section>
       
-		<a id="connect" href="#">Connect</a>
-      <a id="disconnect" href="#">Disconnect</a>
-      
+     	<footer id="primary-foot">
+      </footer>
+
    	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
    	<script type="text/javascript" src="js/jWebSocket.js"></script>
    	<script type="text/javascript" src="js/jwsStreamingPlugIn.js"></script>
@@ -27,5 +35,8 @@
       <script type="text/javascript" src="js/raphael.js"></script>
       
       <script type="text/javascript" src="js/chart.js"></script>
+      
+	</div>
 	</body>
+   
 </html>

@@ -1,49 +1,53 @@
-var jWebSocketClient = null;
-var lineChart = null;
-var lineChartData = [];
+jQuery(function($) {
+	
+	var jWebSocketClient = null;
+	var lineChart = null;
+	var lineChartData = [];
 
-function parseChartData(stream) {
-     var streamData = jQuery.parseJSON(stream);
+	function parseChartData(stream) {
+     
+	  	var streamData = jQuery.parseJSON(stream);
     
-     if (lineChartData.length > 4) {
-          lineChartData.splice(0,1);
-     }
+     	if (lineChartData.length > 10) {
+			lineChartData.splice(0,1);
+     	}
 	  
-	  $('#landing_counter').text(streamData.LANDING);
-  	  $('#boarding_counter').text(streamData.BOARDING);
-  	  $('#taking_off_counter').text(streamData.TAKING_OFF);
+	  	$('#landing_counter').text(streamData.LANDING);
+  	  	$('#boarding_counter').text(streamData.BOARDING);
+  	  	$('#taking_off_counter').text(streamData.TAKING_OFF);
 
-     lineChartData.push(
+     	lineChartData.push(
 	  		{DATE:new Date(streamData.DATE),
 			LANDING:streamData.LANDING,
 			BOARDING:streamData.BOARDING,
 			TAKING_OFF:streamData.TAKING_OFF}
 			);
 
-     lineChart.validateData();
-}
+		lineChart.validateData();
+	}
 
-function disconnect() {
-	if(jWebSocketClient) {
-		jWebSocketClient.stopKeepAlive();
-		var result = jWebSocketClient.close();
-		if (result.code == 0) {
-			alert("jWebSocket disconnected");
-		} else {
-			alert("Error while disconnecting");
+	function disconnect() {
+		
+		if(jWebSocketClient) {
+			jWebSocketClient.stopKeepAlive();
+			var result = jWebSocketClient.close();
+			
+			if (result.code == 0) {
+				alert("jWebSocket disconnected");
+			} else {
+				alert("Error while disconnecting");
+			}
 		}
 	}
-}
 
-function registerStream() {
-	var stream = "chartStream";
-	var result = jWebSocketClient.registerStream(stream);
-	result = jWebSocketClient.resultToString(result);
-	alert("jWebSocket connection established " + result);
-}
+	function registerStream() {
+		var stream = "chartStream";
+		var result = jWebSocketClient.registerStream(stream);
+		result = jWebSocketClient.resultToString(result);
+		alert("jWebSocket connection established " + result);
+	}
 
 
-$(document).ready(function() {
 	
 	if(jws.browserSupportsWebSockets()) {
   		jWebSocketClient = new jws.jWebSocketJSONClient();
@@ -83,7 +87,7 @@ $(document).ready(function() {
 		disconnect();
 	}); // $('#disconnect').click
 
-}); // $(document).ready
+}); // jQuery(function($)
 
 
 $(document).unload(function() {
