@@ -1,20 +1,24 @@
+var jWebSocketClient = null;
+var lineChart = null;
+var lineChartData = [];
+
 jQuery(function($) {
 	
-	var jWebSocketClient = null;
-	var lineChart = null;
-	var lineChartData = [];
+	function logger(message) {
+   	$('#footer_message').text(message).slideDown().delay(500).slideUp();
+	}
 
 	function parseChartData(stream) {
      
 	  	var streamData = jQuery.parseJSON(stream);
     
-     	if (lineChartData.length > 10) {
+     	if (lineChartData.length > 5) {
 			lineChartData.splice(0,1);
      	}
 	  
-	  	$('#landing_counter').text(streamData.LANDING);
-  	  	$('#boarding_counter').text(streamData.BOARDING);
-  	  	$('#taking_off_counter').text(streamData.TAKING_OFF);
+	  	$('#landing').text(streamData.LANDING);
+  	  	$('#boarding').text(streamData.BOARDING);
+  	  	$('#taking_off').text(streamData.TAKING_OFF);
 
      	lineChartData.push(
 	  		{DATE:new Date(streamData.DATE),
@@ -33,9 +37,9 @@ jQuery(function($) {
 			var result = jWebSocketClient.close();
 			
 			if (result.code == 0) {
-				alert("jWebSocket disconnected");
+				logger("jWebSocket disconnected");
 			} else {
-				alert("Error while disconnecting");
+				logger("Error while disconnecting");
 			}
 		}
 	}
@@ -44,7 +48,7 @@ jQuery(function($) {
 		var stream = "chartStream";
 		var result = jWebSocketClient.registerStream(stream);
 		result = jWebSocketClient.resultToString(result);
-		alert("jWebSocket connection established " + result);
+		logger("jWebSocket connection established " + result);
 	}
 
 
@@ -53,7 +57,7 @@ jQuery(function($) {
   		jWebSocketClient = new jws.jWebSocketJSONClient();
   	} else {
    	var message = jws.MSG_WS_NOT_SUPPORTED;
-	 	alert(message);
+	 	logger(message);
 	}
 	
 	$('#connect').click(function() {
@@ -70,15 +74,15 @@ jQuery(function($) {
 					if(jWebSocketClient.isLoggedIn()) {
 						parseChartData(levent.data);
 					} else {
-						alert("Authentication process.");
+						logger("Authentication process.");
 					}
 				},
 				OnClose: function(levent) {
-					alert("jWebSocket connection closed");
+					logger("jWebSocket connection closed");
 				}
 			}); // jWebSocketClient.logon
 		} catch(e) {
-			alert("Exception: " + e.message );
+			logger("Exception: " + e.message );
 		}
 	}); // $('#connect').click
 
@@ -113,7 +117,7 @@ AmCharts.ready(function () {
    categoryAxis.dashLength = 2;
    categoryAxis.gridAlpha = 0.15;
    categoryAxis.axisColor = "#DADADA";
-   categoryAxis.dateFormats = [{period: "ss",format: "JJ:NN:SS"}];
+   categoryAxis.dateFormats = [{period: "ss",format: "JJ:NN:SS"}, {period: "mm",format: "JJ:NN:SS"}];
 	
 	var valueAxis = new AmCharts.ValueAxis();
    valueAxis.gridAlpha = 0;
