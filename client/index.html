@@ -50,20 +50,40 @@
       </div>
     </div>
 
+
     <div class="container">
 
       <div class="row">
         <div class="span8 chart">
-        		<h2>Status of Flights</h2>
-          	<div id="chartdiv"></div>
+           	<div id="chartdiv"></div>
         </div>
         <div class="span4 summary">
           <h2>Summary of Flights</h2>
-          <hr>
           <ul class="unstyled">
-            <li><h1>Landing <span id="landing">0</span></h1></li>
-        	   <li><h1>Boarding <span id="boarding">0</span></h1></li>
-        		<li><h1>Taking Off <span id="taking_off">0</span></h1></li>
+            <li>
+            	<h3>Landing</h3>
+                <p>
+	                <span id="landing">0</span>
+					<span id="max-landing">0</span>
+        	        <span id="avg-landing">0</span>
+                </p>
+            </li>
+        	<li>
+            	<h3>Boarding</h3>
+                <p>
+                	<span id="boarding">0</span>
+                    <span id="max-boarding">0</span>
+                    <span id="avg-boarding">0</span>
+                </p>
+			</li>
+        	<li>
+            	<h3>Taking Off</h3> 
+                <p>
+	                <span id="taking_off">0</span>
+					<span id="max-taking_off">0</span>
+        	        <span id="avg-taking_off">0</span>
+                </p>
+            </li>
           </ul>
         </div>
       </div>

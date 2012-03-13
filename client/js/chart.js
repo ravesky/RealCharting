@@ -2,6 +2,11 @@ var jWebSocketClient = null;
 var lineChart = null;
 var lineChartData = [];
 
+var max_landing = 0;
+var max_boarding = 0;
+var max_taking_off = 0;
+
+
 jQuery(function($) {
 	
 	function logger(message) {
@@ -15,11 +20,23 @@ jQuery(function($) {
      	if (lineChartData.length > 5) {
 			lineChartData.splice(0,1);
      	}
+		
+		var total = streamData.LANDING + streamData.BOARDING + streamData.TAKING_OFF;
 	  
+	  	
 	  	$('#landing').text(streamData.LANDING);
+		(streamData.LANDING > max_landing ) : max_landing = streamData.LANDING;
+		$('#max_landing').text(max_landing);
+		
   	  	$('#boarding').text(streamData.BOARDING);
+		(streamData.BOARDING > max_boarding ) : max_boarding = streamData.BOARDING;
+		$('#max_boarding').text(max_boarding);
+				
   	  	$('#taking_off').text(streamData.TAKING_OFF);
+		(streamData.TAKING_OFF > max_taking_off ) : max_taking_off = streamData.TAKING_OFF;
+		$('#max_boarding').text(max_taking_off);
 
+		
      	lineChartData.push(
 	  		{DATE:new Date(streamData.DATE),
 			LANDING:streamData.LANDING,

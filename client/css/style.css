@@ -25,18 +25,18 @@ body {
 }
 
 .summary {
-	padding: 40px 0px;
+	padding: 10px 0px;
 }
 
 .summary li {
 	display: block;
-	font-size:36px;
-	letter-spacing:1px;
+	letter-spacing:2px;
 }
 
 .summary li span {
-	float:right;
 	color:#F03;
+	font-size:48px;
+	font-weight:bold;
 }
 
 #footer_message {
