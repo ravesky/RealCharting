@@ -8,7 +8,6 @@
 		<relativePath>../..</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.jwebsocket</groupId>
 	<artifactId>jWebSocketStreamingPlugIn</artifactId>
 	<name>jWebSocketStreamingPlugIn</name>
 	<description>jWebSocket Streaming Plug-in</description>

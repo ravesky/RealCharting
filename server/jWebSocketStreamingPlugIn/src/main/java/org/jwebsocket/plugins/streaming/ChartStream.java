@@ -62,7 +62,7 @@ public class ChartStream extends TokenStream {
       try {
           Class.forName("com.mysql.jdbc.Driver");
           mConnection = DriverManager.getConnection(
-                  "jdbc:mysql://16.38.0.15/jWebSocket", "root", "toor");
+                  "jdbc:mysql://localhost/jWebSocket", "root", "toor");
           
          if (log.isDebugEnabled()) {
                log.debug("Connection with database established...");
