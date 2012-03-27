@@ -148,6 +148,7 @@ a:hover {
 }
 .row {
   margin-left: -20px;
+	margin-bottom: 15px;
   *zoom: 1;
 }
 .row:before,
@@ -160,7 +161,7 @@ a:hover {
 }
 [class*="span"] {
   float: left;
-  margin-left: 20px;
+  margin-left: 15px;
 }
 .container,
 .navbar-fixed-top .container,
@@ -3953,8 +3954,8 @@ a.thumbnail:hover {
   color: #ffffff;
 }
 .hero-unit {
-  padding: 60px;
-  margin-bottom: 30px;
+  padding: 20px;
+  /* margin-bottom: 30px; */
   background-color: #eeeeee;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
