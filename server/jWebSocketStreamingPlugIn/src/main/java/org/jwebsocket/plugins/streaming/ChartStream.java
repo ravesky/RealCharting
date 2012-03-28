@@ -22,7 +22,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+
+import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
 import org.jwebsocket.logging.Logging;
@@ -143,14 +146,29 @@ public class ChartStream extends TokenStream {
                try {
                   PreparedStatement pSelect = 
                         mConnection.prepareStatement(
+                       /*
                         "SELECT FLIGHT_STATUS, COUNT(FLIGHT_STATUS) " +
+                        "FROM flights " +
+                        "GROUP BY FLIGHT_STATUS");
+                        */
+                        "SELECT FLIGHT_STATUS, " +
+                        "COUNT(FLIGHT_STATUS), " +
+                        "ROUND(COUNT(FLIGHT_STATUS)*100/(SELECT COUNT(*) FROM flights),2) " +
                         "FROM flights " +
                         "GROUP BY FLIGHT_STATUS");
                   
                   ResultSet pResult = pSelect.executeQuery();
                   
                   while (pResult.next()) {
-                     lToken.setInteger(pResult.getString(1), pResult.getInt(2));
+                     
+                     FastMap<String, Object> lRecord = new FastMap<String, Object>();
+                     lRecord.put("TYPE", pResult.getString(1));
+                     lRecord.put("COUNT", pResult.getInt(2));
+                     lRecord.put("AVERAGE", pResult.getFloat(3));
+                     
+                     lToken.setMap("record", lRecord);
+                      
+                     //lToken.setInteger(pResult.getString(1), pResult.getInt(2));
                   }
                   
                   log.debug("Chart Streamer Token '" + lToken + "'...");
