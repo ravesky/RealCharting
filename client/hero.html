@@ -46,9 +46,9 @@
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
-            <form class="navbar-form pull-right">
-            	<input type="text" class="input-small" placeholder="User" value="guest"/>
-              <input type="password" class="input-small" placeholder="Password" value="guest"/>
+            <form id="login-form" class="navbar-form pull-right">
+            	<input type="text" class="input-small" placeholder="User" value="guest" required/>
+              <input type="password" class="input-small" placeholder="Password" value="guest" required/>
               <button type="submit" class="btn">Sign in</button>
             </form>          
           </div><!--/.nav-collapse -->
@@ -61,7 +61,7 @@
 			<div class="row">
       	<div class="span7">
       		<div class="hero-unit" style="height:270px">
-          	<div class="chart" style="background-color:#FFF;height:100%"></div>
+          	<div id="chart-div" style="background-color:#FFF;height:100%"></div>
       		</div> <!-- div class="hero-unit" -->
       	</div> <!-- div class="span7" -->
 
@@ -70,31 +70,31 @@
           	<div class="pull-left" style="width:140px;height:inherit">
             	<h2>Boarding</h2>
             	<ul style="list-style:none">
-              	<li style="line-height:80px;font-size:60px;font-weight:bold">99</li>
+              	<li id="cnt-boarding" style="line-height:80px;font-size:70px;font-weight:bold">99</li>
                 <li>Average</li>
-                <li>11</li>
+                <li id="ave-boarding">0</li>
                 <li>Maximum</li>
-                <li>11</li>
+                <li id="max-boarding">0</li>
               </ul>
             </div>
            	<div class="pull-left" style="width:140px;height:inherit">
             	<h2>Landing</h2>
             	<ul style="list-style:none">
-              	<li style="line-height:80px;font-size:60px;font-weight:bold">99</li>
+              	<li id="cnt-landing" style="line-height:80px;font-size:70px;font-weight:bold">99</li>
                 <li>Average</li>
-                <li>11</li>
+                <li id="ave-landing">0</li>
                 <li>Maximum</li>
-                <li>11</li>
+                <li id="max-landing">0</li>
               </ul>
             </div>
           	<div class="pull-left" style="width:140px;height:inherit">
             	<h2>Taking Off</h2>
             	<ul style="list-style:none">
-              	<li style="line-height:80px;font-size:60px;font-weight:bold">99</li>
+              	<li id="cnt-taking-off"style="line-height:80px;font-size:70px;font-weight:bold">99</li>
                 <li>Average</li>
-                <li>11</li>
+                <li id="ave-taking-off">0</li>
                 <li>Maximum</li>
-                <li>11</li>
+                <li id="max-taking-off">0</li>
               </ul>
             </div>
         	</div> <!-- div class="hero-unit" --> 
@@ -121,8 +121,8 @@
       </div>
       
   		<p>
-       	<a class="btn btn-primary btn-large disabled">Connect</a>
-	      <a class="btn btn-primary btn-large disabled">Disconnect</a>
+       	<a id="connect" class="btn btn-primary btn-large disabled">Connect</a>
+	      <a id="disconnect" class="btn btn-primary btn-large disabled">Disconnect</a>
  	    </p>
 
       <hr>
@@ -138,6 +138,11 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-1.7.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/jWebSocket.js"></script>
+    <script src="js/jwsStreamingPlugIn.js"></script>
+    <script src="js/amcharts.js"></script>
+    <script src="js/raphael.js"></script>
+    <script src="js/chart.js"></script>
 
   </body>
 </html>

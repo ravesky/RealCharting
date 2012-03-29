@@ -13,23 +13,38 @@ jQuery(function($) {
 	function parseChartData(stream) {
      
 	  	var streamData = jQuery.parseJSON(stream);
-    
+
      	if (lineChartData.length > 5) {
-			lineChartData.splice(0,1);
+				lineChartData.splice(0,1);
      	}
 		
-	  	$('#landing').text(streamData.LANDING);
-  	  	$('#boarding').text(streamData.BOARDING);
-  	  	$('#taking_off').text(streamData.TAKING_OFF);
+	  	$('#cnt-landing').text(streamData.CNT_LANDING);
+ 	  	$('#cnt-boarding').text(streamData.CNT_BOARDING);
+ 	  	$('#cnt-taking-off').text(streamData.CNT_TAKING_OFF);
+
+	  	$('#ave-landing').text(streamData.AVE_LANDING);
+ 	  	$('#ave-boarding').text(streamData.AVE_BOARDING);
+ 	  	$('#ave-taking-off').text(streamData.AVE_TAKING_OFF);
+			
+			if (streamData.CNT_LANDING > parseInt($('#max-landing').text())) {
+				$('#max-landing').text(streamData.CNT_LANDING);
+			}
+			
+			if (streamData.CNT_BOARDING > parseInt($('#max-boarding').text())) {
+				$('#max-boarding').text(streamData.CNT_BOARDING);
+			}
+			
+  		if (streamData.CNT_TAKING_OFF > parseInt($('#max-taking-off').text())) {
+				$('#max-taking-off').text(streamData.CNT_TAKING_OFF);
+			}
 		
      	lineChartData.push(
 	  		{DATE:new Date(streamData.DATE),
-			LANDING:streamData.LANDING,
-			BOARDING:streamData.BOARDING,
-			TAKING_OFF:streamData.TAKING_OFF}
-			);
+				 LANDING:streamData.CNT_LANDING,
+				 BOARDING:streamData.CNT_BOARDING,
+				 TAKING_OFF:streamData.CNT_TAKING_OFF});
 
-		lineChart.validateData();
+			lineChart.validateData();
 	}
 
 	function disconnect() {
@@ -63,6 +78,11 @@ jQuery(function($) {
 	 	logger(message);
 	}
 	
+	$('#login-form').submit(function(e) {
+		e.preventDefault();
+		$('#connect').removeClass('disabled');
+	});
+	
 	$('#connect').click(function() {
 		var URL = jws.getDefaultServerURL();
 	
@@ -71,6 +91,8 @@ jQuery(function($) {
 				OnOpen: function(levent) {
 				},
 			   OnWelcome: function(levent) {
+					$('#disconnect').removeClass('disabled');
+					$('#connect').addClass('disabled');
 					registerStream();
     			},  
 				OnMessage: function(levent, token) {
@@ -92,6 +114,8 @@ jQuery(function($) {
 	
 	$('#disconnect').click(function() {
 		disconnect();
+		$('#disconnect').addClass('disabled');
+	  $('#connect').removeClass('disabled');
 	}); // $('#disconnect').click
 
 }); // jQuery(function($)
@@ -109,7 +133,7 @@ AmCharts.ready(function () {
 	lineChart = new AmCharts.AmSerialChart();
 	lineChart.dataProvider = lineChartData;
    lineChart.marginRight = 5;
-   lineChart.marginLeft = 10;
+   lineChart.marginLeft = 5;
 	lineChart.marginTop = 5;
 	lineChart.marginBottom = 5;	
    lineChart.categoryField = "DATE";
@@ -117,7 +141,7 @@ AmCharts.ready(function () {
 	var categoryAxis = lineChart.categoryAxis;
    categoryAxis.parseDates = true;
    categoryAxis.minPeriod = "ss";
-   categoryAxis.dashLength = 2;
+   categoryAxis.dashLength = 12;
    categoryAxis.gridAlpha = 0.15;
    categoryAxis.axisColor = "#DADADA";
    categoryAxis.dateFormats = [{period: "ss",format: "JJ:NN:SS"}, {period: "mm",format: "JJ:NN:SS"}];
@@ -125,7 +149,7 @@ AmCharts.ready(function () {
 	var valueAxis = new AmCharts.ValueAxis();
    valueAxis.gridAlpha = 0;
    valueAxis.axisColor = "#DADADA";
-   valueAxis.axisThickness = 2;
+   valueAxis.axisThickness = 1;
    valueAxis.inside = true;
    lineChart.addValueAxis(valueAxis);
 	
@@ -171,6 +195,6 @@ AmCharts.ready(function () {
 	takingOffGraph.lineThickness = 2;
 	lineChart.addGraph(takingOffGraph);
 
-	lineChart.write("chartdiv");
+	lineChart.write("chart-div");
 
 });
