@@ -24,6 +24,9 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
 import org.apache.log4j.Logger;
 import org.jwebsocket.logging.Logging;
 import org.jwebsocket.server.TokenServer;
@@ -136,11 +139,8 @@ public class ChartStream extends TokenStream {
 
                Token lToken = TokenFactory.createToken("event");
                
-               //lToken.setString("name", "stream");
                lToken.setString("streamID", getStreamID());
                lToken.setString("DATE", simpleDateFormat.format(new Date()));
-               
-               //List<Object> lList = new FastList<Object>();
                
                try {
                   PreparedStatement pSelect = 
@@ -160,6 +160,27 @@ public class ChartStream extends TokenStream {
                      lToken.setDouble(
                            "AVE_"+ pResult.getString(1), pResult.getFloat(3));
                   }
+                  
+                  PreparedStatement pSelect2 = mConnection.prepareStatement(
+                		  "SELECT SUM(f.flight_passengers), a.airline_name " +
+                		  "FROM FLIGHTS f INNER JOIN AIRLINES a " +
+                		  "ON f.airline_id = a.airline_id GROUP BY f.airline_id");
+                
+                  
+                  ResultSet pResult2 = pSelect2.executeQuery();
+                  
+                  FastList<Object> lList = new FastList<Object>();
+                  
+                  while (pResult2.next()) {
+                	  
+                	  FastMap<String,Object> lMap = new FastMap<String,Object>();
+                	  lMap.put("airline", pResult2.getString(2));
+                	  lMap.put("passengers", pResult2.getInt(1));
+
+                	  lList.add(lMap);      				
+                  }
+                  
+                  lToken.setList("list", lList);
                   
                   log.debug("Chart Streamer Token '" + lToken + "'...");
                           

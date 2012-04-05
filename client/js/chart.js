@@ -1,19 +1,15 @@
-var jWebSocketClient = null;
-var lineChart = null;
-var lineChartData = [];
-
 jQuery(function($) {
 	
-	/* Functions */
+	var jWebSocketClient = null;
+	var lineChartData = [];
+	var pieChartData = [];
 	
-	function logger(message) {
-   	$('#footer_message').text(message).slideDown().delay(500).slideUp();
-	}
-
 	function parseChartData(stream) {
      
 	  	var streamData = jQuery.parseJSON(stream);
-
+			
+			console.log(streamData);
+			
      	if (lineChartData.length > 5) {
 				lineChartData.splice(0,1);
      	}
@@ -22,9 +18,9 @@ jQuery(function($) {
  	  	$('#cnt-boarding').text(streamData.CNT_BOARDING);
  	  	$('#cnt-taking-off').text(streamData.CNT_TAKING_OFF);
 
-	  	$('#ave-landing').text(streamData.AVE_LANDING);
- 	  	$('#ave-boarding').text(streamData.AVE_BOARDING);
- 	  	$('#ave-taking-off').text(streamData.AVE_TAKING_OFF);
+	  	$('#ave-landing').text(streamData.AVE_LANDING.toFixed(2));
+ 	  	$('#ave-boarding').text(streamData.AVE_BOARDING.toFixed(2));
+ 	  	$('#ave-taking-off').text(streamData.AVE_TAKING_OFF.toFixed(2));
 			
 			if (streamData.CNT_LANDING > parseInt($('#max-landing').text())) {
 				$('#max-landing').text(streamData.CNT_LANDING);
@@ -39,12 +35,28 @@ jQuery(function($) {
 			}
 		
      	lineChartData.push(
-	  		{DATE:new Date(streamData.DATE),
+	  		{DATE:new Date(),
 				 LANDING:streamData.CNT_LANDING,
 				 BOARDING:streamData.CNT_BOARDING,
 				 TAKING_OFF:streamData.CNT_TAKING_OFF});
 
 			lineChart.validateData();
+			
+			pieChartData = streamData.list;
+			
+			pieChart.validateData();
+			
+			/*
+			pieChartData = [
+				{"airline":"Air France","passengers":268},
+				{"airline":"Lufthansa","passengers":419},
+				{"airline":"Iberia","passengers":219},
+				{"airline":"British Airways","passengers":450},
+				{"airline":"Aerolíneas Argentinas","passengers":245},
+				{"airline":"American Airlines","passengers":291},
+				{"airline":"Qantas","passengers":1220}
+			];
+			*/
 	}
 
 	function disconnect() {
@@ -54,9 +66,11 @@ jQuery(function($) {
 			var result = jWebSocketClient.close();
 			
 			if (result.code == 0) {
-				logger("jWebSocket disconnected");
+				$('#alert-div').html('').removeClass().addClass("alert alert-info");
+				$('#alert-div').html('<strong>Info!</strong> jWebSocket disconnected');
 			} else {
-				logger("Error while disconnecting");
+				$('#alert-div').html('').removeClass().addClass("alert alert-error");
+				$('#alert-div').html('<strong>Info!</strong> Error while disconnecting');
 			}
 		}
 	}
@@ -65,7 +79,8 @@ jQuery(function($) {
 		var stream = "chartStream";
 		var result = jWebSocketClient.registerStream(stream);
 		result = jWebSocketClient.resultToString(result);
-		logger("jWebSocket connection established " + result);
+		$('#alert-div').html('').removeClass().addClass("alert alert-success");
+		$('#alert-div').html('<strong>Info!</strong> jWebSocket connection established " + result');
 	}
 
 	
@@ -74,104 +89,89 @@ jQuery(function($) {
 	if(jws.browserSupportsWebSockets()) {
   		jWebSocketClient = new jws.jWebSocketJSONClient();
   	} else {
-   	var message = jws.MSG_WS_NOT_SUPPORTED;
-	 	logger(message);
+			$('#alert-div').html('').removeClass().addClass("alert alert-error");
+			$('#alert-div').html('<strong>Error!</strong> ' + jws.MSG_WS_NOT_SUPPORTED);			
 	}
 	
-	$('#login-form').submit(function(e) {
-		e.preventDefault();
-		$('#connect').removeClass('disabled');
-	});
-	
-	$('#connect').click(function() {
+	$('#connect').toggle(function() {
 		var URL = jws.getDefaultServerURL();
 	
 		try {
 			var result = jWebSocketClient.logon(URL, jws.GUEST_USER_LOGINNAME, jws.GUEST_USER_PASSWORD, {
 				OnOpen: function(levent) {
 				},
-			   OnWelcome: function(levent) {
-					$('#disconnect').removeClass('disabled');
-					$('#connect').addClass('disabled');
+			  OnWelcome: function(levent) {
 					registerStream();
-    			},  
+    		},  
 				OnMessage: function(levent, token) {
 					if(jWebSocketClient.isLoggedIn()) {
 						parseChartData(levent.data);
+						$('#alert-div').html('').removeClass().addClass("alert alert-info");
+						$('#alert-div').html('<strong>Info!</strong> ' + levent.data);
 					} else {
-						logger("Authentication process.");
+						$('#alert-div').html('').removeClass().addClass("alert alert-info");
+						$('#alert-div').html('<strong>Info!</strong> Authentication process...');
 					}
 				},
 				OnClose: function(levent) {
-					logger("jWebSocket connection closed");
+					$('#alert-div').html('').removeClass().addClass("alert alert-info");
+					$('#alert-div').html('<strong>Info!</strong> jWebSocket connection closed.');
 				}
 			}); // jWebSocketClient.logon
 		} catch(e) {
 			logger("Exception: " + e.message );
 		}
-	}); // $('#connect').click
-
-	
-	$('#disconnect').click(function() {
+		
+		$('#connect').text('Disconnect');
+	}, 
+	function() {
 		disconnect();
-		$('#disconnect').addClass('disabled');
-	  $('#connect').removeClass('disabled');
-	}); // $('#disconnect').click
-
-}); // jQuery(function($)
-
-
-$(document).unload(function() {
-	jWebSocketClient.stopKeepAlive();
-	disconnect();
-}); //$(document).unload
-
-
-
-AmCharts.ready(function () {
+		$('#connect').text('Connect');
+	});
 	
-	lineChart = new AmCharts.AmSerialChart();
+	
+	var lineChart = new AmCharts.AmSerialChart();
 	lineChart.dataProvider = lineChartData;
-   lineChart.marginRight = 5;
-   lineChart.marginLeft = 5;
+  lineChart.marginRight = 5;
+  lineChart.marginLeft = 5;
 	lineChart.marginTop = 5;
 	lineChart.marginBottom = 5;	
-   lineChart.categoryField = "DATE";
+  lineChart.categoryField = "DATE";
 	
 	var categoryAxis = lineChart.categoryAxis;
-   categoryAxis.parseDates = true;
-   categoryAxis.minPeriod = "ss";
-   categoryAxis.dashLength = 12;
-   categoryAxis.gridAlpha = 0.15;
-   categoryAxis.axisColor = "#DADADA";
-   categoryAxis.dateFormats = [{period: "ss",format: "JJ:NN:SS"}, {period: "mm",format: "JJ:NN:SS"}];
+  categoryAxis.parseDates = true;
+  categoryAxis.minPeriod = "ss";
+  categoryAxis.dashLength = 12;
+  categoryAxis.gridAlpha = 0.15;
+  categoryAxis.axisColor = "#DADADA";
+  categoryAxis.dateFormats = [{period: "ss",format: "JJ:NN:SS"}, {period: "mm",format: "JJ:NN:SS"}];
 	
 	var valueAxis = new AmCharts.ValueAxis();
-   valueAxis.gridAlpha = 0;
-   valueAxis.axisColor = "#DADADA";
-   valueAxis.axisThickness = 1;
-   valueAxis.inside = true;
-   lineChart.addValueAxis(valueAxis);
+  valueAxis.gridAlpha = 0;
+  valueAxis.axisColor = "#DADADA";
+  valueAxis.axisThickness = 1;
+  valueAxis.inside = true;
+  lineChart.addValueAxis(valueAxis);
 	
 	var landingGraph = new AmCharts.AmGraph();
-   landingGraph.valueAxis = valueAxis;
-   landingGraph.type = "smoothedLine";
-   landingGraph.bullet = "round";
-   landingGraph.bulletColor = "#FFFFFF";
-   landingGraph.bulletBorderColor = "#FF0F00";
-   landingGraph.bulletBorderThickness = 2;
-   landingGraph.bulletSize = 5;
-   landingGraph.title = "Landing";
-   landingGraph.valueField = "LANDING";
-   landingGraph.lineColor = "#FF0F00";
-   landingGraph.lineThickness = 2;
-   lineChart.addGraph(landingGraph);
+  landingGraph.valueAxis = valueAxis;
+  landingGraph.type = "smoothedLine";
+  landingGraph.bullet = "round";
+  landingGraph.bulletColor = "#FFFFFF";
+  landingGraph.bulletBorderColor = "#FF0F00";
+  landingGraph.bulletBorderThickness = 2;
+  landingGraph.bulletSize = 5;
+  landingGraph.title = "Landing";
+  landingGraph.valueField = "LANDING";
+  landingGraph.lineColor = "#FF0F00";
+  landingGraph.lineThickness = 2;
+  lineChart.addGraph(landingGraph);
 
-   var boardingGraph = new AmCharts.AmGraph();
+  var boardingGraph = new AmCharts.AmGraph();
 	boardingGraph.valueAxis = valueAxis;
-   boardingGraph.type = "smoothedLine";
+  boardingGraph.type = "smoothedLine";
 	boardingGraph.bullet = "round";
-   boardingGraph.bulletColor = "#FFFFFF";
+  boardingGraph.bulletColor = "#FFFFFF";
 	boardingGraph.bulletBorderColor = "#FF6600";
 	boardingGraph.bulletBorderThickness = 2;
 	boardingGraph.bulletSize = 5;         
@@ -182,9 +182,9 @@ AmCharts.ready(function () {
 	lineChart.addGraph(boardingGraph);
 
 	var takingOffGraph = new AmCharts.AmGraph();
-   takingOffGraph.valueAxis = valueAxis;
+  takingOffGraph.valueAxis = valueAxis;
 	takingOffGraph.type = "smoothedLine";
-   takingOffGraph.bullet = "round";
+  takingOffGraph.bullet = "round";
 	takingOffGraph.bulletColor = "#FFFFFF";
 	takingOffGraph.bulletBorderColor = "#FF9E01";
 	takingOffGraph.bulletBorderThickness = 2;
@@ -195,6 +195,26 @@ AmCharts.ready(function () {
 	takingOffGraph.lineThickness = 2;
 	lineChart.addGraph(takingOffGraph);
 
-	lineChart.write("chart-div");
+	lineChart.write("line-chart-div");
+	
+	
+  var pieChart = new AmCharts.AmPieChart();
+  pieChart.dataProvider = pieChartData;
+  pieChart.titleField = "airline";
+  pieChart.valueField = "passengers";
+  pieChart.outlineColor = "#FFFFFF";
+  pieChart.outlineAlpha = 0.8;
+  pieChart.outlineThickness = 2;
+	pieChart.labelRadius = -30;
+  pieChart.labelText = "[[percents]]%";
+	pieChart.dataChanged = true; 
 
-});
+  pieChart.write("pie-chart-div");
+	
+}); // jQuery(function($)
+
+
+$(document).unload(function() {
+	jWebSocketClient.stopKeepAlive();
+	disconnect();
+}); //$(document).unload
