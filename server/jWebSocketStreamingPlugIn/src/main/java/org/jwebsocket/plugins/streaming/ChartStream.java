@@ -157,15 +157,14 @@ public class ChartStream extends TokenStream {
                      
                      lToken.setInteger(
                            "CNT_"+ pResult.getString(1) , pResult.getInt(2));
-                     lToken.setDouble(
-                           "AVE_"+ pResult.getString(1), pResult.getFloat(3));
+                     lToken.setString(
+                           "AVE_"+ pResult.getString(1), Float.toString((pResult.getFloat(3))) + '%');
                   }
                   
                   PreparedStatement pSelect2 = mConnection.prepareStatement(
                 		  "SELECT SUM(f.flight_passengers), a.airline_name " +
                 		  "FROM FLIGHTS f INNER JOIN AIRLINES a " +
                 		  "ON f.airline_id = a.airline_id GROUP BY f.airline_id");
-                
                   
                   ResultSet pResult2 = pSelect2.executeQuery();
                   
